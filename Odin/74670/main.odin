@@ -71,21 +71,27 @@ setNWE :: proc(mem: ^Mem, bit: bool){
   }
 }
 
-main :: proc(){
-  mem1 : Mem = memInit();
+setNRE :: proc(mem: ^Mem, bit: bool){
+  mem.nre = bit;
 
-  mem1.inp[0] = true;
-  mem1.inp[1] = true;
-  mem1.inp[2] = true;
-  mem1.inp[3] = true;
-  mem1.nre = false;
+  if bit == true{ 
+    for i in 0..<4{ mem.out[i] = .FL; }
+    return; 
+  }
 
-  mem1.readdr[0] = true;
-  mem1.readdr[1] = true;
+  readdr_bit1 : bool = mem.readdr[0];
+  readdr_bit2 : bool = mem.readdr[1];
+  matrix_index : int = btoi(readdr_bit1, readdr_bit2);
 
-  setNWE(&mem1, false);
-
-  fmt.println(mem1.mem);
-  fmt.println(mem1.out);
+  for i in 0..<4{
+    if mem.mem[matrix_index][i] == false{
+      mem.out[i] = .OFF;
+      continue;
+    }
+    mem.out[i] = .ON;
+  }
 }
 
+main :: proc(){
+  mem1 : Mem = memInit();
+}
