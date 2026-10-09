@@ -92,6 +92,38 @@ setNRE :: proc(mem: ^Mem, bit: bool){
   }
 }
 
+setWRADDR :: proc(mem: ^Mem, bit1: bool, bit2: bool){
+  mem.wraddr[0] = bit1;
+  mem.wraddr[1] = bit2;
+
+  if mem.nwe == 1{ return; }
+  matrix_index1 := btoi(bit1, bit2);
+  for i in 0..<4{
+    mem.mem[matrix_index][i] = mem.inp[i];
+  }
+
+  if mem.nre == 1 { return; }
+  readdr_bit1 := mem.readdr[0];
+  readdr_bit2 := mem.readdr[1];
+  matrix_index2 := btoi(readdr_bit1, readdr_bit2);
+
+  if matrix_index1 != matrix_index2{ return; }
+  for i in 0..<4{
+    mem.out[i] = mem.inp[i];
+  }
+}
+
+setREADDR :: proc(mem: ^Mem, bit1: bool, bit2: bool){
+  mem.readdr[0] = bit1;
+  mem.readdr[1] = bit2;
+
+  if mem.nre == 1 { return; }
+  matrix_index := btoi(bit1, bit2);
+  for i in 0..<4{
+    mem.out[i] = mem.mem[matrix_index][i];
+  }
+}
+
 main :: proc(){
   mem1 : Mem = memInit();
 }
