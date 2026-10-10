@@ -96,20 +96,20 @@ setWRADDR :: proc(mem: ^Mem, bit1: bool, bit2: bool){
   mem.wraddr[0] = bit1;
   mem.wraddr[1] = bit2;
 
-  if mem.nwe == 1{ return; }
+  if mem.nwe == true{ return; }
   matrix_index1 := btoi(bit1, bit2);
   for i in 0..<4{
-    mem.mem[matrix_index][i] = mem.inp[i];
+    mem.mem[matrix_index1][i] = mem.inp[i];
   }
 
-  if mem.nre == 1 { return; }
+  if mem.nre == true { return; }
   readdr_bit1 := mem.readdr[0];
   readdr_bit2 := mem.readdr[1];
   matrix_index2 := btoi(readdr_bit1, readdr_bit2);
 
   if matrix_index1 != matrix_index2{ return; }
   for i in 0..<4{
-    mem.out[i] = mem.inp[i];
+    mem.out[i] = .ON if mem.inp[i] == true else .OFF;
   }
 }
 
@@ -117,10 +117,10 @@ setREADDR :: proc(mem: ^Mem, bit1: bool, bit2: bool){
   mem.readdr[0] = bit1;
   mem.readdr[1] = bit2;
 
-  if mem.nre == 1 { return; }
+  if mem.nre == true { return; }
   matrix_index := btoi(bit1, bit2);
   for i in 0..<4{
-    mem.out[i] = mem.mem[matrix_index][i];
+    mem.out[i] = .ON if mem.mem[matrix_index][i] == true else .OFF;
   }
 }
 
@@ -130,18 +130,18 @@ setINP :: proc(mem: ^Mem, bit1: bool, bit2: bool, bit3: bool, bit4: bool){
   mem.inp[2] = bit3;
   mem.inp[3] = bit4;
 
-  if mem.nwe == 1 { return; }
+  if mem.nwe == true { return; }
 
   wraddr_bit1 := mem.wraddr[0];
   wraddr_bit2 := mem.wraddr[1];
   matrix_index1 := btoi(wraddr_bit1, wraddr_bit2);
 
-  mem.mem[matrix_index][0] = bit1;
-  mem.mem[matrix_index][1] = bit2;
-  mem.mem[matrix_index][2] = bit3;
-  mem.mem[matrix_index][3] = bit4;
+  mem.mem[matrix_index1][0] = bit1;
+  mem.mem[matrix_index1][1] = bit2;
+  mem.mem[matrix_index1][2] = bit3;
+  mem.mem[matrix_index1][3] = bit4;
 
-  if mem.nre == 1 { return; }
+  if mem.nre == true { return; }
 
   readdr_bit1 := mem.readdr[0];
   readdr_bit2 := mem.readdr[1];
@@ -149,10 +149,14 @@ setINP :: proc(mem: ^Mem, bit1: bool, bit2: bool, bit3: bool, bit4: bool){
 
   if matrix_index1 != matrix_index2 { return; }
 
-  mem.out[0] = bit1;
-  mem.out[1] = bit2;
-  mem.out[2] = bit3;
-  mem.out[3] = bit4;
+  mem.out[0] = .ON if bit1 == true else .OFF;
+  mem.out[1] = .ON if bit2 == true else .OFF;
+  mem.out[2] = .ON if bit3 == true else .OFF;
+  mem.out[3] = .ON if bit4 == true else .OFF;
+}
+
+getOUT :: proc(mem: ^Mem) -> [4]Tristate{
+  return mem.out;
 }
 
 main :: proc(){
