@@ -124,6 +124,37 @@ setREADDR :: proc(mem: ^Mem, bit1: bool, bit2: bool){
   }
 }
 
+setINP :: proc(mem: ^Mem, bit1: bool, bit2: bool, bit3: bool, bit4: bool){
+  mem.inp[0] = bit1;
+  mem.inp[1] = bit2;
+  mem.inp[2] = bit3;
+  mem.inp[3] = bit4;
+
+  if mem.nwe == 1 { return; }
+
+  wraddr_bit1 := mem.wraddr[0];
+  wraddr_bit2 := mem.wraddr[1];
+  matrix_index1 := btoi(wraddr_bit1, wraddr_bit2);
+
+  mem.mem[matrix_index][0] = bit1;
+  mem.mem[matrix_index][1] = bit2;
+  mem.mem[matrix_index][2] = bit3;
+  mem.mem[matrix_index][3] = bit4;
+
+  if mem.nre == 1 { return; }
+
+  readdr_bit1 := mem.readdr[0];
+  readdr_bit2 := mem.readdr[1];
+  matrix_index2 := btoi(readdr_bit1, readdr_bit2);
+
+  if matrix_index1 != matrix_index2 { return; }
+
+  mem.out[0] = bit1;
+  mem.out[1] = bit2;
+  mem.out[2] = bit3;
+  mem.out[3] = bit4;
+}
+
 main :: proc(){
   mem1 : Mem = memInit();
 }
