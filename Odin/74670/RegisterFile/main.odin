@@ -1,4 +1,4 @@
-package main
+package regfile
 import fmt "core:fmt"
 
 Mem :: struct{
@@ -157,6 +157,16 @@ setINP :: proc(mem: ^Mem, bit1: bool, bit2: bool, bit3: bool, bit4: bool){
 
 getOUT :: proc(mem: ^Mem) -> [4]Tristate{
   return mem.out;
+}
+
+printMem :: proc(mem: Mem){
+  fmt.println("INP:", mem.inp);
+  fmt.println("WRADDR:", mem.wraddr);
+  fmt.println("READDR:", mem.readdr);
+  fmt.println("OUT:", mem.out);
+  fmt.println("NWE:", mem.nwe);
+  fmt.println("NRE:", mem.nre);
+  fmt.println("MEM:", mem.mem);
 }
 
 main :: proc(){
